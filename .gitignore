@@ -20,3 +20,5 @@ target/
 hs_err_pid*
 
 from-python-to-java-microservices-bebama.iml
+
+/src/main/resources/connection.properties
