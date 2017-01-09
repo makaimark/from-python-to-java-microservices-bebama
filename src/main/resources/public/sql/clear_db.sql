@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS webshop, webshopAnalytics;
+DROP TABLE IF EXISTS webshop, webshopAnalytics CASCADE;
