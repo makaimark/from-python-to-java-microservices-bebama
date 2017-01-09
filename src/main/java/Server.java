@@ -4,13 +4,16 @@ import static spark.Spark.*;
 
 public class Server {
 
+    private static APIController controller;
+
     public static void main(String[] args) {
 
+        controller = new APIController();
         port(60000);
 
-        get("/api", APIController::api);
-        get("/api/visitor_count", APIController::visitorCounter);
-        get("/api/visit_time", APIController::countVisitTime);
-        get("/api/revenue", APIController::countRevenue);
+        get("/api", controller::api);
+        get("/api/visitor_count", controller::visitorCounter);
+        get("/api/visit_time", controller::countVisitTime);
+        get("/api/revenue", controller::countRevenue);
     }
 }

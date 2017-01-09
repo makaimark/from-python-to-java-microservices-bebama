@@ -3,24 +3,37 @@ package controller;
 import spark.Request;
 import spark.Response;
 
-/**
- * Created by makaimark on 2017.01.09..
- */
 public class APIController {
 
-    public static String api(Request request, Response response) {
+    private String sessionId;
+    private String webShopId;
+
+    public String api(Request request, Response response) {
+        webShopId = request.queryParams("webshopId");
+        sessionId = request.queryParams("sessionId");
         return "";
     }
 
-    public static String visitorCounter(Request request, Response response) {
+    public String visitorCounter(Request request, Response response) {
+        sessionId = request.queryParams("sessionId");
         return "";
     }
 
-    public static String countVisitTime(Request request, Response response) {
+    public String countVisitTime(Request request, Response response) {
+        sessionId = request.queryParams("sessionId");
         return "";
     }
 
-    public static String countRevenue(Request request, Response response) {
+    public String countRevenue(Request request, Response response) {
+        sessionId = request.queryParams("sessionId");
         return "";
+    }
+
+    public String getWebShopId() {
+        return webShopId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
     }
 }
