@@ -20,6 +20,7 @@ public class APIController {
     }
 
     public String countVisitTime(Request request, Response response) {
+        Integer time = Integer.valueOf(request.queryParams("time"));
         sessionId = request.queryParams("sessionId");
         return "";
     }
