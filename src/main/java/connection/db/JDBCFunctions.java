@@ -2,8 +2,9 @@ package connection.db;
 
 import model.Analytics;
 
-import java.sql.*;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * Created by makaimark on 2017.01.10..
@@ -12,14 +13,15 @@ public class JDBCFunctions {
 
     public static void add(Analytics model) throws Exception {
         try (Connection connection = JDBCConnect.getConnection()) {
-            PreparedStatement query = connection.prepareStatement("INSERT INTO webshopAnalytics (an_id, webshop_id," +
-                    " session_id, visit_start, visit_end, location, amount, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-            query.setString(1, String.valueOf(model.getWebshopId()));
+            PreparedStatement query = connection.prepareStatement("INSERT INTO webshopAnalytics (webshop_id," +
+                    " session_id, visit_start, visit_end, location, amount, currency) VALUES (?, ?, ?, ?, ?, ?, ?);");
+            query.setInt(1, model.getWebshopId());
             query.setString(2, model.getSessionId());
-            query.setString(3, String.valueOf(model.getStartTime()));
-            query.setString(3, String.valueOf(model.getEndTime()));
-            query.setString(3, String.valueOf(model.getAmount()));
-            query.setString(3, String.valueOf(model.getCurrency()));
+            query.setTimestamp(3, model.getStartTime());
+            query.setTimestamp(4, model.getEndTime());
+            query.setString(5, String.valueOf(model.getLocation()));
+            query.setFloat(6, model.getAmount());
+            query.setString(7, String.valueOf(model.getCurrency()));
             query.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,19 +1,20 @@
 package model;
 
+import java.sql.Timestamp;
 import java.util.Currency;
 
 public class Analytics {
 
-    private  Integer id;
+    private Integer id;
     private Integer webshopId;
     private String sessionId;
-    private Integer startTime;
-    private Integer endTime;
-    private String Location;
+    private Timestamp startTime;
+    private Timestamp endTime;
+    private LocationModel Location;
     private Float amount;
     private Currency currency;
 
-    public Analytics(Integer webshopID, String sessionId, Integer startTime, Integer endTime, String location, Float amount, String currency){
+    public Analytics(Integer webshopID, String sessionId, Timestamp startTime, Timestamp endTime, LocationModel location, Float amount, String currency) {
         this.webshopId = webshopID;
         this.sessionId = sessionId;
         this.webshopId = webshopID;
@@ -48,27 +49,27 @@ public class Analytics {
         this.sessionId = sessionId;
     }
 
-    public Integer getStartTime() {
+    public Timestamp getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(Timestamp startTime) {
         this.startTime = startTime;
     }
 
-    public Integer getEndTime() {
+    public Timestamp getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
     }
 
-    public String getLocation() {
+    public LocationModel getLocation() {
         return Location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(LocationModel location) {
         Location = location;
     }
 
@@ -88,7 +89,7 @@ public class Analytics {
         this.currency = currency;
     }
 
-    public Integer spentTime() {
-        return this.endTime - this.startTime;
-    }
+//    public Timestamp spentTime() {
+//        return this.endTime - this.startTime;
+//    }
 }
