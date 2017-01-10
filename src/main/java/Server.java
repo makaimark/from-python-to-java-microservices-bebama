@@ -1,8 +1,12 @@
+import connection.db.JDBCConnect;
+import connection.db.PropertiesConfig;
 import controller.APIController;
 import controller.LocationController;
 import org.thymeleaf.resourceresolver.ClassLoaderResourceResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
+
+import java.io.IOException;
 
 import static spark.Spark.*;
 
@@ -10,12 +14,14 @@ public class Server {
 
     private static APIController controller;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         controller = new APIController();
         port(60000);
 
         staticFileLocation("/public");
+        PropertiesConfig.config();
+        JDBCConnect.setConnection("connection.properties");
 
 
         // --- TEMPLATE ENGINE ---
