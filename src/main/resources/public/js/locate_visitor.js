@@ -16,7 +16,7 @@ function getCoords() {
 function noLocation() {
     $.ajax({
             type: "POST",
-            url: "/test",
+            url: "/get_location",
             data: JSON.stringify({"city": "N/A", "country": "N/A", "countryCode": "N/A"})
         }
     );

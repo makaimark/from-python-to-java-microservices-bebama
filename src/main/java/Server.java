@@ -1,4 +1,5 @@
 import controller.APIController;
+import controller.LocationController;
 import org.thymeleaf.resourceresolver.ClassLoaderResourceResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -31,7 +32,7 @@ public class Server {
         get("stopTime", controller::stopSession);
         get("/api/revenue", controller::countRevenue);
         get("/startTime", controller::startSession);
-        get("/get_location", Location::renderLocator, new ThymeleafTemplateEngine());
-        post("/get_location", Location::getData);
+        get("/get_location", LocationController::renderLocator, new ThymeleafTemplateEngine());
+        post("/get_location", LocationController::getData);
     }
 }
