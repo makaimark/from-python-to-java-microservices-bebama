@@ -31,5 +31,7 @@ public class Server {
         get("stopTime", controller::stopSession);
         get("/api/revenue", controller::countRevenue);
         get("/startTime", controller::startSession);
+        get("/get_location", Location::renderLocator, new ThymeleafTemplateEngine());
+        post("/get_location", Location::getData);
     }
 }
