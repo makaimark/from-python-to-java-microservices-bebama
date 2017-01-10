@@ -1,4 +1,5 @@
 import controller.APIController;
+import controller.Location;
 import org.thymeleaf.resourceresolver.ClassLoaderResourceResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;

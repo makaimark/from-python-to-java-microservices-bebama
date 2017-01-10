@@ -1,3 +1,5 @@
+package controller;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -22,9 +24,9 @@ public class Location {
     }
 
     //   JSON keys: {city, country, countryCode}
-    public static Response getData(Request req, Response res) throws ParseException {
+    public static JSONObject getData(Request req, Response res) throws ParseException {
         JSONObject jsonLocation = (JSONObject) new JSONParser().parse(req.queryParams().iterator().next());
-        return res;
+        return jsonLocation;
     }
 
 }

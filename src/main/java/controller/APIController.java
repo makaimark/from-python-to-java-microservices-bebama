@@ -1,5 +1,7 @@
 package controller;
 
+import connection.db.JDBCFunctions;
+import model.Analytics;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -7,14 +9,15 @@ import spark.Response;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class APIController {
 
     private String sessionId;
     private String webShopId;
+    private Integer startTime = null;
+    private Integer stopTime = null;
+
 
     public ModelAndView renderTest(Request req, Response res) throws Exception {
         startSession(req, res);
@@ -38,14 +41,17 @@ public class APIController {
         Date date = new Date(Long.parseLong(time));
         String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
         System.out.println("Stop" + formatted);
+        this.stopTime = (int) (date.getTime()/1000);
         return "";
     }
 
     public String startSession(Request request, Response response){
         sessionId = request.session().id();
+        System.out.println(sessionId);
         Date date = new Date();
         String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
         System.out.println("Start" + formatted);
+        this.startTime = (int) (date.getTime()/1000);
         return "";
     }
 
@@ -60,5 +66,19 @@ public class APIController {
 
     public String getSessionId() {
         return sessionId;
+    }
+
+    public void analitycs(Request req, Response res) throws org.json.simple.parser.ParseException {
+        String location = Location.getData(req, res).toString();
+        float amount = 10;
+        Currency currency = Currency.getInstance(Locale.US);
+        Analytics model = new Analytics(1, sessionId, this.startTime, this.stopTime, location, amount, String.valueOf(currency));
+
+        try {
+            JDBCFunctions.add(model);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
