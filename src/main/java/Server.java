@@ -28,7 +28,8 @@ public class Server {
         get("/", controller::renderTest, new ThymeleafTemplateEngine(templateResolver));
         get("/api", controller::api);
         get("/api/visitor_count", controller::visitorCounter);
-        get("/api/visit_time", controller::countVisitTime);
+        get("stopTime", controller::stopSession);
         get("/api/revenue", controller::countRevenue);
+        get("/startTime", controller::startSession);
     }
 }

@@ -15,7 +15,7 @@ $(document).ready(function () {
             // code for IE6, IE5
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");        //Open a different type of ajax call.
         }
-        var url = "/api/visit_time?time="+endTime;        //Send the time on the page to the server
+        var url = "/stopTime?time="+endTime;        //Send the time on the page to the server
         xmlhttp.open("GET",url,false);        //The false at the end tells ajax to use a synchronous call which wont be severed by the user leaving.
         xmlhttp.send(null);        //Send the request and don't wait for a response.
     };

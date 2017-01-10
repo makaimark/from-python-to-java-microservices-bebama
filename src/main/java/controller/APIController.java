@@ -28,17 +28,18 @@ public class APIController {
         return "";
     }
 
-    public String countVisitTime(Request request, Response response) {
-        System.out.println("In visit time");
-        //Integer time = Integer.valueOf(request.queryParams("time"));
+    public String stopSession(Request request, Response response) {
         String time = request.queryParams("time");
-        System.out.println(time);
-        sessionId = request.queryParams("sessionId");
         return "";
     }
 
     public String countRevenue(Request request, Response response) {
         sessionId = request.queryParams("sessionId");
+        return "";
+    }
+
+    public String startSession(Request request, Response response){
+        sessionId = request.session().id();
         return "";
     }
 
