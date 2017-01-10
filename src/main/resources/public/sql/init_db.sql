@@ -13,5 +13,6 @@ CREATE TABLE IF NOT EXISTS webshopAnalytics
   visit_start TIMESTAMP,
   visit_end TIMESTAMP,
   location VARCHAR,
-  amount FLOAT NULL
+  amount FLOAT NULL,
+  currency VARCHAR
 );
