@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS webshopAnalytics
   an_id SERIAL PRIMARY KEY,
   webshop_id INT REFERENCES webshop(ws_id),
   session_id VARCHAR,
-  time_spent INTERVAL,
+  visit_start TIMESTAMP,
+  visit_end TIMESTAMP,
   location VARCHAR,
-  amount FLOAT
+  amount FLOAT NULL
 );
