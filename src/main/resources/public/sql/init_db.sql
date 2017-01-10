@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS webshopAnalytics
   webshop_id INT REFERENCES webshop(ws_id),
   session_id VARCHAR,
   visit_start TIMESTAMP,
-  visit_end TIMESTAMP,
+  visit_end TIMESTAMP NULL,
   location VARCHAR,
   amount FLOAT NULL,
-  currency VARCHAR
+  currency VARCHAR NULL
 );
