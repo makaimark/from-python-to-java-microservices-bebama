@@ -10,10 +10,10 @@ public class Analytics {
     private Integer startTime;
     private Integer endTime;
     private String Location;
-    private Integer amount;
+    private Float amount;
     private Currency currency;
 
-    public Analytics(Integer webshopID, String sessionId, Integer startTime, Integer endTime, String location, Integer amount, String currency){
+    public Analytics(Integer webshopID, String sessionId, Integer startTime, Integer endTime, String location, Float amount, String currency){
         this.webshopId = webshopID;
         this.sessionId = sessionId;
         this.webshopId = webshopID;
@@ -72,11 +72,11 @@ public class Analytics {
         Location = location;
     }
 
-    public Integer getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Float amount) {
         this.amount = amount;
     }
 
