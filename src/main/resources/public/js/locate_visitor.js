@@ -54,7 +54,7 @@ function getCity(position) {
 function sendLocationData(city, country, countryCode) {
     $.ajax({
             type: "POST",
-            url: "/test",
+            url: "/get_location",
             data: JSON.stringify({"city": city, "country": country, "countryCode": countryCode})
         }
     );
