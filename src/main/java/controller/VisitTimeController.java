@@ -8,10 +8,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class VisitTimeController {
 
@@ -30,8 +27,7 @@ public class VisitTimeController {
             put("max", "00:00:00");
         }};
         if (visits.size() > 0) {
-            IntStream visitSeconds = visits.stream()
-                    .map(Analytics::secondsSpent).mapToInt(Integer::intValue);
+            IntStream visitSeconds = visits.stream().map(Analytics::secondsSpent).mapToInt(Integer::intValue);
             statistics.put("average", intToString(visitSeconds.sum() / visits.size()));
             statistics.put("min", intToString(visitSeconds.min().getAsInt()));
             statistics.put("max", intToString(visitSeconds.max().getAsInt()));
