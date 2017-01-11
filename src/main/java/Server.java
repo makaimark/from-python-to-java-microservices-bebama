@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static spark.Spark.*;
+import static spark.debug.DebugScreen.enableDebugScreen;
 
 public class Server {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
@@ -77,6 +78,8 @@ public class Server {
         get("/api/revenue", controller::countRevenue);
         get("/startTime", controller::startSession);
         post("/get_location", LocationController::getData);
+
+        enableDebugScreen();
 
         logger.info("Server started on port " + PORT);
 

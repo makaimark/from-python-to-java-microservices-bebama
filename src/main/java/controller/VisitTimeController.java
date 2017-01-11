@@ -18,8 +18,7 @@ public class VisitTimeController {
     }
 
     public static String countAverage(List<Analytics> visits){
-        Integer totalSeconds = visits.stream().mapToInt(Analytics::secondsSpent).sum();
-        Integer averageSeconds = Math.floorDiv(totalSeconds, visits.size());
+        Integer averageSeconds = visits.stream().mapToInt(Analytics::secondsSpent).sum()/visits.size();
         Integer hours = averageSeconds / 3600;
         Integer minutes = (averageSeconds % 3600) / 60;
         Integer seconds = averageSeconds % 60;
