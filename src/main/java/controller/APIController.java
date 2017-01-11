@@ -16,95 +16,100 @@ import java.util.*;
 public class APIController {
 
     private String sessionId;
-    private String webShopId;
+    private int webShopId = 1;
     private Timestamp startTime;
     private Timestamp stopTime;
 
 
-    public ModelAndView renderTest(Request req, Response res) throws Exception {
-        startSession(req, res);
+    public ModelAndView renderMain(Request req, Response res) throws Exception {
         Map<Object, Object> params = new HashMap<>();
-        return new ModelAndView(params, "test");
+        startSession(req, res);
+        return new ModelAndView(params, "time_location");
     }
 
-    public String api(Request request, Response response) {
-        webShopId = request.queryParams("webshopId");
-        sessionId = request.queryParams("sessionId");
+    public String api(Request req, Response res) {
+        sessionId = req.session().id();
+        startSession(req, res);
         return "";
     }
 
     public String visitTimeCounter(Request request, Response response) throws ParseException {
-        webShopId = request.queryParams("webshopId");
+        webShopId = Integer.parseInt(request.queryParams("webshopId"));
         sessionId = request.queryParams("sessionId");
 
         if ( request.queryParams().size() == 3 ) {
             String start = request.queryParams("startTime");
             String stop = request.queryParams("stopTime");
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            VisitTimeController.averageVisitTimeByTime(Integer.parseInt(webShopId), convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+            VisitTimeController.averageVisitTimeByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
         } else {
-            VisitTimeController.averageVisitTime(Integer.parseInt(webShopId));
+            VisitTimeController.averageVisitTime(webShopId);
         }
         return "";
     }
 
     public String visitorCounter(Request request, Response response) throws ParseException {
-        webShopId = request.queryParams("webshopId");
+        webShopId = Integer.parseInt(request.queryParams("webshopId"));
         sessionId = request.queryParams("sessionId");
 
         if ( request.queryParams().size() == 3 ) {
             String start = request.queryParams("startTime");
             String stop = request.queryParams("stopTime");
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            VisitorController.visitorsByTime(Integer.parseInt(webShopId), convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+            VisitorController.visitorsByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
         } else {
-            VisitorController.visitors(Integer.parseInt(webShopId));
+            VisitorController.visitors(webShopId);
         }
         return "";
     }
 
-    public String stopSession(Request request, Response response) throws ParseException {
-        String time = request.queryParams("time");
+    public String stopSession(Request req, Response res) throws ParseException, org.json.simple.parser.ParseException {
+        String time = req.queryParams("time");
         Date date = new Date(Long.parseLong(time));
         String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        System.out.println("Stop" + formatted);
+        System.out.println("Stop " + formatted);
         this.stopTime = convertToTimeStamp(date);
-        try {
-            analitycs();
-        } catch (org.json.simple.parser.ParseException e) {
-            e.printStackTrace();
-        }
+        analytics(req, res);
         return "";
     }
 
-    public String startSession(Request request, Response response) {
+    public String startSession(Request req, Response res) {
+        sessionId = req.session().id();
         Date date = new Date();
         String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        System.out.println("Start" + formatted);
+        System.out.println("Start " + formatted);
         this.startTime = convertToTimeStamp(date);
         return "";
     }
 
     public String countRevenue(Request request, Response response) throws ParseException {
         sessionId = request.queryParams("sessionId");
-        webShopId = request.queryParams("webshopId");
+        webShopId = Integer.parseInt(request.queryParams("webshopId"));
 
         if ( request.queryParams().size() == 3 ) {
             String start = request.queryParams("startTime");
             String stop = request.queryParams("stopTime");
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            RevenueController.avenueByTime(Integer.parseInt(webShopId), convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+            RevenueController.avenueByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
         } else {
-            RevenueController.totalAvenue(Integer.parseInt(webShopId));
+            RevenueController.totalAvenue(webShopId);
         }
         return "";
     }
 
-    private void analitycs() throws org.json.simple.parser.ParseException {
+    public int getWebShopId() {
+        return webShopId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void analytics(Request req, Response res) throws org.json.simple.parser.ParseException {
         LocationModel location = LocationModel.getAllLocations().get(0);
         float amount = 10;
         Currency currency = Currency.getInstance(Locale.US);
-        Analytics model = new Analytics(1, sessionId, this.startTime, this.stopTime, location, amount, String.valueOf(currency));
+        Analytics model = new Analytics(getWebShopId(), getSessionId(), this.startTime, this.stopTime, location, amount, String.valueOf(currency));
         try {
             AnalyticsDaoJDBC.add(model);
         } catch (Exception e) {
