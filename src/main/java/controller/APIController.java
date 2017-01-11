@@ -20,21 +20,31 @@ public class APIController {
     private int webShopId = 1;
     private Timestamp startTime;
     private Timestamp stopTime;
-    String start;
-    String stop;
-    DateFormat format;
+    private Date start;
+    private Date stop;
+    private DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    private Date customDateParser(String inputDate) throws ParseException {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            Date tempDate = inputFormat.parse(inputDate);
+            String formattedDate = format.format(tempDate);
+            return format.parse(formattedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-    public ModelAndView renderMain(Request req, Response res) throws Exception {
+    public ModelAndView renderMain(Request req, Response res) {
         Map<Object, Object> params = new HashMap<>();
         startSession(req, res);
         return new ModelAndView(params, "time_location");
     }
 
-    private void getTimes(Request req, Response res) {
-        start = req.queryParams("startTime");
-        stop = req.queryParams("stopTime");
-        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private void getTimes(Request req, Response res) throws ParseException {
+        start = customDateParser(req.queryParams("startTime"));
+        stop = customDateParser(req.queryParams("stopTime"));
     }
 
     public String api(Request req, Response res) {
@@ -43,30 +53,30 @@ public class APIController {
         return "";
     }
 
-    public String visitTimeCounter(Request request, Response response) throws ParseException, SQLException {
-        webShopId = Integer.parseInt(request.queryParams("webshopId"));
-        sessionId = request.queryParams("sessionId");
-        if (request.queryParams().size() == 3) {
-            getTimes(request, response);
-            return VisitTimeController.averageVisitTimeByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+    public String visitTimeCounter(Request req, Response res) throws ParseException, SQLException {
+        webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        sessionId = req.queryParams("sessionId");
+        if (req.queryParams().size() == 3) {
+            getTimes(req, res);
+            return VisitTimeController.averageVisitTimeByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop));
         } else {
             return VisitTimeController.averageVisitTime(webShopId);
         }
     }
 
-    public int visitorCounter(Request request, Response response) throws ParseException, SQLException {
-        webShopId = Integer.parseInt(request.queryParams("webshopId"));
-        sessionId = request.queryParams("sessionId");
+    public int visitorCounter(Request req, Response res) throws ParseException, SQLException {
+        webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        sessionId = req.queryParams("sessionId");
 
-        if (request.queryParams().size() == 3) {
-            getTimes(request, response);
-            return VisitorController.visitorsByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+        if (req.queryParams().size() == 3) {
+            getTimes(req, res);
+            return VisitorController.visitorsByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop));
         } else {
             return VisitorController.visitors(webShopId);
         }
     }
 
-    public String stopSession(Request req, Response res) throws ParseException, org.json.simple.parser.ParseException {
+    public String stopSession(Request req, Response res) {
         String time = req.queryParams("time");
         Date date = new Date(Long.parseLong(time));
         String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
@@ -85,13 +95,13 @@ public class APIController {
         return "";
     }
 
-    public Float countRevenue(Request request, Response response) throws ParseException, SQLException {
-        sessionId = request.queryParams("sessionId");
-        webShopId = Integer.parseInt(request.queryParams("webshopId"));
+    public Float countRevenue(Request req, Response res) throws ParseException, SQLException {
+        sessionId = req.queryParams("sessionId");
+        webShopId = Integer.parseInt(req.queryParams("webshopId"));
 
-        if (request.queryParams().size() == 3) {
-            getTimes(request, response);
-            return RevenueController.revenueByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+        if (req.queryParams().size() == 3) {
+            getTimes(req, res);
+            return RevenueController.revenueByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop));
         } else {
             return RevenueController.totalRevenue(webShopId);
         }
@@ -105,7 +115,7 @@ public class APIController {
         return sessionId;
     }
 
-    public void analytics(Request req, Response res) throws org.json.simple.parser.ParseException {
+    public void analytics(Request req, Response res) {
         LocationModel location = LocationModel.getAllLocations().get(0);
         float amount = 10;
         Currency currency = Currency.getInstance(Locale.US);
@@ -118,9 +128,13 @@ public class APIController {
     }
 
     private Timestamp convertToTimeStamp(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.MILLISECOND, 0);
-        return new java.sql.Timestamp(date.getTime());
+        if (date != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.set(Calendar.MILLISECOND, 0);
+            return new java.sql.Timestamp(date.getTime());
+        } else {
+            return null;
+        }
     }
 }
