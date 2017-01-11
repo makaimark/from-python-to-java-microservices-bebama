@@ -20,12 +20,21 @@ public class APIController {
     private int webShopId = 1;
     private Timestamp startTime;
     private Timestamp stopTime;
+    String start;
+    String stop;
+    DateFormat format;
 
 
     public ModelAndView renderMain(Request req, Response res) throws Exception {
         Map<Object, Object> params = new HashMap<>();
         startSession(req, res);
         return new ModelAndView(params, "time_location");
+    }
+
+    private void getTimes(Request req, Response res) {
+        start = req.queryParams("startTime");
+        stop = req.queryParams("stopTime");
+        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     public String api(Request req, Response res) {
@@ -37,31 +46,24 @@ public class APIController {
     public String visitTimeCounter(Request request, Response response) throws ParseException, SQLException {
         webShopId = Integer.parseInt(request.queryParams("webshopId"));
         sessionId = request.queryParams("sessionId");
-
-        if ( request.queryParams().size() == 3 ) {
-            String start = request.queryParams("startTime");
-            String stop = request.queryParams("stopTime");
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            VisitTimeController.averageVisitTimeByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+        if (request.queryParams().size() == 3) {
+            getTimes(request, response);
+            return VisitTimeController.averageVisitTimeByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
         } else {
-            VisitTimeController.averageVisitTime(webShopId);
+            return VisitTimeController.averageVisitTime(webShopId);
         }
-        return "";
     }
 
-    public String visitorCounter(Request request, Response response) throws ParseException, SQLException {
+    public int visitorCounter(Request request, Response response) throws ParseException, SQLException {
         webShopId = Integer.parseInt(request.queryParams("webshopId"));
         sessionId = request.queryParams("sessionId");
 
-        if ( request.queryParams().size() == 3 ) {
-            String start = request.queryParams("startTime");
-            String stop = request.queryParams("stopTime");
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            VisitorController.visitorsByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+        if (request.queryParams().size() == 3) {
+            getTimes(request, response);
+            return VisitorController.visitorsByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
         } else {
-            VisitorController.visitors(webShopId);
+            return VisitorController.visitors(webShopId);
         }
-        return "";
     }
 
     public String stopSession(Request req, Response res) throws ParseException, org.json.simple.parser.ParseException {
@@ -83,19 +85,16 @@ public class APIController {
         return "";
     }
 
-    public String countRevenue(Request request, Response response) throws ParseException, SQLException {
+    public Float countRevenue(Request request, Response response) throws ParseException, SQLException {
         sessionId = request.queryParams("sessionId");
         webShopId = Integer.parseInt(request.queryParams("webshopId"));
 
-        if ( request.queryParams().size() == 3 ) {
-            String start = request.queryParams("startTime");
-            String stop = request.queryParams("stopTime");
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            RevenueController.revenueByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+        if (request.queryParams().size() == 3) {
+            getTimes(request, response);
+            return RevenueController.revenueByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
         } else {
-            RevenueController.totalRevenue(webShopId);
+            return RevenueController.totalRevenue(webShopId);
         }
-        return "";
     }
 
     public int getWebShopId() {
@@ -116,7 +115,6 @@ public class APIController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private Timestamp convertToTimeStamp(Date date) {
