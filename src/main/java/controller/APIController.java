@@ -1,6 +1,6 @@
 package controller;
 
-import connection.db.JDBCFunctions;
+import connection.db.AnalyticsDaoJDBC;
 import model.Analytics;
 import model.LocationModel;
 import spark.ModelAndView;
@@ -73,7 +73,7 @@ public class APIController {
         Currency currency = Currency.getInstance(Locale.US);
         Analytics model = new Analytics(1, sessionId, this.startTime, this.stopTime, location, amount, String.valueOf(currency));
         try {
-            JDBCFunctions.add(model);
+            AnalyticsDaoJDBC.add(model);
         } catch (Exception e) {
             e.printStackTrace();
         }
