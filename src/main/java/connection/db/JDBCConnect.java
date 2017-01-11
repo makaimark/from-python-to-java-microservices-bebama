@@ -19,7 +19,7 @@ public class JDBCConnect {
     private static String DB_USER;
     private static String DB_PASSWORD;
 
-    protected static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DBURL, DB_USER, DB_PASSWORD);
     }
 

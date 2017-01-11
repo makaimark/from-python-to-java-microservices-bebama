@@ -12,7 +12,7 @@ public class Graph {
 
     public String buildGraphURL(String size, String name, String values, String partition, String colors) throws URISyntaxException {
         URIBuilder builder = new URIBuilder(API_URL);
-        builder.addParameter("chs", size);
+        builder.addParameter("chs", size); // 200x400
         builder.addParameter("chdlp", "b"); // must have :D
         builder.addParameter("chtt", name);
         builder.addParameter("chdl", values); // needed format: Asleep|Awake|randomthing
