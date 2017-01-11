@@ -58,7 +58,7 @@ public class AnalyticsDaoJDBC {
              Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery(query);
         ) {
-            if (rs.next()) {
+            while (rs.next()) {
                 Analytics analytics = new Analytics(rs.getInt("webshop_id"),
                         rs.getString("session_id"),
                         rs.getTimestamp("visit_start"),
