@@ -47,10 +47,9 @@ public class APIController {
         stop = customDateParser(req.queryParams("stopTime"));
     }
 
-    public String api(Request req, Response res) {
-        sessionId = req.session().id();
-        startSession(req, res);
-        return "";
+    public String api(Request req, Response res) throws ParseException, SQLException {
+        return String.format("{'totalVisitorCount': %s, 'averageVisitTime': %s, 'totalRevenue': %s}",
+                visitorCounter(req, res), visitTimeCounter(req, res), countRevenue(req, res));
     }
 
     public String visitTimeCounter(Request req, Response res) throws ParseException, SQLException {
