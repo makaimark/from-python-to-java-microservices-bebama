@@ -48,8 +48,14 @@ public class APIController {
     }
 
     public String api(Request req, Response res) throws ParseException, SQLException {
-        return String.format("{'totalVisitorCount': %s, 'averageVisitTime': %s, 'totalRevenue': %s}",
-                visitorCounter(req, res), visitTimeCounter(req, res), countRevenue(req, res));
+        Map<String, Integer> topLocations = LocationVisitorController.topLocations(Integer.parseInt(req.queryParams("webshopId")));
+        int highestVisitorCount = Collections.max(topLocations.values());
+        String topLocation = topLocations.entrySet()
+                .stream()
+                .filter(entry -> Objects.equals(entry.getValue(), highestVisitorCount))
+                .map(Map.Entry::getKey).findFirst().orElse(null);
+        return String.format("{'totalVisitorCount': %s, 'mostVisitorsFrom': %s, 'averageVisitTime': %s, 'totalRevenue': %s}",
+                visitorCounter(req, res), topLocation, visitTimeCounter(req, res), countRevenue(req, res));
     }
 
     public String visitTimeCounter(Request req, Response res) throws ParseException, SQLException {
@@ -78,8 +84,6 @@ public class APIController {
     public String stopSession(Request req, Response res) {
         String time = req.queryParams("time");
         Date date = new Date(Long.parseLong(time));
-        String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        System.out.println("Stop " + formatted);
         this.stopTime = convertToTimeStamp(date);
         analytics(req, res);
         return "";
@@ -88,8 +92,6 @@ public class APIController {
     public String startSession(Request req, Response res) {
         sessionId = req.session().id();
         Date date = new Date();
-        String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        System.out.println("Start " + formatted);
         this.startTime = convertToTimeStamp(date);
         return "";
     }
