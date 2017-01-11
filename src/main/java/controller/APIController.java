@@ -8,6 +8,7 @@ import spark.Request;
 import spark.Response;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,8 +33,33 @@ public class APIController {
         return "";
     }
 
-    public String visitorCounter(Request request, Response response) {
+    public String visitTimeCounter(Request request, Response response) throws ParseException {
+        webShopId = request.queryParams("webshopId");
         sessionId = request.queryParams("sessionId");
+
+        if ( request.queryParams().size() == 3 ) {
+            String start = request.queryParams("startTime");
+            String stop = request.queryParams("stopTime");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            VisitTimeController.averageVisitTimeByTime(Integer.parseInt(webShopId), convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+        } else {
+            VisitTimeController.averageVisitTime(Integer.parseInt(webShopId));
+        }
+        return "";
+    }
+
+    public String visitorCounter(Request request, Response response) throws ParseException {
+        webShopId = request.queryParams("webshopId");
+        sessionId = request.queryParams("sessionId");
+
+        if ( request.queryParams().size() == 3 ) {
+            String start = request.queryParams("startTime");
+            String stop = request.queryParams("stopTime");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            VisitorController.visitorsByTime(Integer.parseInt(webShopId), convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+        } else {
+            VisitorController.visitors(Integer.parseInt(webShopId));
+        }
         return "";
     }
 
@@ -43,6 +69,11 @@ public class APIController {
         String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
         System.out.println("Stop" + formatted);
         this.stopTime = convertToTimeStamp(date);
+        try {
+            analitycs();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
         return "";
     }
 
@@ -54,20 +85,22 @@ public class APIController {
         return "";
     }
 
-    public String countRevenue(Request request, Response response) {
+    public String countRevenue(Request request, Response response) throws ParseException {
         sessionId = request.queryParams("sessionId");
+        webShopId = request.queryParams("webshopId");
+
+        if ( request.queryParams().size() == 3 ) {
+            String start = request.queryParams("startTime");
+            String stop = request.queryParams("stopTime");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            RevenueController.avenueByTime(Integer.parseInt(webShopId), convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+        } else {
+            RevenueController.totalAvenue(Integer.parseInt(webShopId));
+        }
         return "";
     }
 
-    public String getWebShopId() {
-        return webShopId;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void analitycs(Request req, Response res) throws org.json.simple.parser.ParseException {
+    private void analitycs() throws org.json.simple.parser.ParseException {
         LocationModel location = LocationModel.getAllLocations().get(0);
         float amount = 10;
         Currency currency = Currency.getInstance(Locale.US);
