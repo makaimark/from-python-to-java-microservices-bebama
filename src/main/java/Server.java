@@ -74,6 +74,7 @@ public class Server {
         get("/api", controller::api);
         get("/api/visitor_count", controller::visitorCounter);
         get("/api/visit_time_count", controller::visitTimeCounter);
+        get("/api/location_visits", controller::locationVisits);
         get("stopTime", controller::stopSession);
         get("/api/revenue", controller::countRevenue);
         get("/startTime", controller::startSession);

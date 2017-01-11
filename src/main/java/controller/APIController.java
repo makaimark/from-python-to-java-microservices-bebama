@@ -23,6 +23,7 @@ public class APIController {
     private Date start;
     private Date stop;
     private DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private Map<String, Integer> topLocations;
 
     private Date customDateParser(String inputDate) throws ParseException {
         try {
@@ -48,7 +49,7 @@ public class APIController {
     }
 
     public String api(Request req, Response res) throws ParseException, SQLException {
-        Map<String, Integer> topLocations = LocationVisitorController.topLocations(Integer.parseInt(req.queryParams("webshopId")));
+        topLocations = LocationVisitorController.topLocations(Integer.parseInt(req.queryParams("webshopId")));
         int highestVisitorCount = Collections.max(topLocations.values());
         String topLocation = topLocations.entrySet()
                 .stream()
@@ -138,4 +139,16 @@ public class APIController {
             return null;
         }
     }
+
+    public Map locationVisits(Request req, Response res) throws SQLException, ParseException {
+        sessionId = req.queryParams("sessionId");
+        webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        if (req.queryParams().size() == 3) {
+            getTimes(req, res);
+            return LocationVisitorController.topLocationsByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop));
+        } else {
+            return topLocations = LocationVisitorController.topLocations(webShopId);
+        }
+    }
+
 }
