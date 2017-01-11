@@ -19,7 +19,7 @@ public class APIController {
     private String sessionId;
     private int webShopId = 1;
     private Timestamp startTime;
-    private Timestamp stopTime;
+    private Timestamp endTime;
     private Date start;
     private Date stop;
     private DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -44,12 +44,18 @@ public class APIController {
 
     private void getTimes(Request req, Response res) throws ParseException {
         start = customDateParser(req.queryParams("startTime"));
-        stop = customDateParser(req.queryParams("stopTime"));
+        stop = customDateParser(req.queryParams("endTime"));
     }
 
     public String api(Request req, Response res) throws ParseException, SQLException {
-        return String.format("{'totalVisitorCount': %s, 'averageVisitTime': %s, 'totalRevenue': %s}",
-                visitorCounter(req, res), visitTimeCounter(req, res), countRevenue(req, res));
+        Map<String, Integer> topLocations = LocationVisitorController.topLocations(Integer.parseInt(req.queryParams("webshopId")));
+        int highestVisitorCount = Collections.max(topLocations.values());
+        String topLocation = topLocations.entrySet()
+                .stream()
+                .filter(entry -> Objects.equals(entry.getValue(), highestVisitorCount))
+                .map(Map.Entry::getKey).findFirst().orElse(null);
+        return String.format("{'totalVisitorCount': %s, 'mostVisitorsFrom': %s, 'averageVisitTime': %s, 'totalRevenue': %s}",
+                visitorCounter(req, res), topLocation, visitTimeCounter(req, res), countRevenue(req, res));
     }
 
     public String visitTimeCounter(Request req, Response res) throws ParseException, SQLException {
@@ -78,9 +84,7 @@ public class APIController {
     public String stopSession(Request req, Response res) {
         String time = req.queryParams("time");
         Date date = new Date(Long.parseLong(time));
-        String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        System.out.println("Stop " + formatted);
-        this.stopTime = convertToTimeStamp(date);
+        this.endTime = convertToTimeStamp(date);
         analytics(req, res);
         return "";
     }
@@ -88,8 +92,6 @@ public class APIController {
     public String startSession(Request req, Response res) {
         sessionId = req.session().id();
         Date date = new Date();
-        String formatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        System.out.println("Start " + formatted);
         this.startTime = convertToTimeStamp(date);
         return "";
     }
@@ -118,7 +120,7 @@ public class APIController {
         LocationModel location = LocationModel.getAllLocations().get(0);
         float amount = 10;
         Currency currency = Currency.getInstance(Locale.US);
-        Analytics model = new Analytics(getWebShopId(), getSessionId(), this.startTime, this.stopTime, location, amount, String.valueOf(currency));
+        Analytics model = new Analytics(getWebShopId(), getSessionId(), this.startTime, this.endTime, location, amount, String.valueOf(currency));
         try {
             AnalyticsDaoJDBC.add(model);
         } catch (Exception e) {
