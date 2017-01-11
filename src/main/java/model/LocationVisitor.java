@@ -25,8 +25,4 @@ public class LocationVisitor {
     public void setVisitors(Integer visitors) {
         this.visitors = visitors;
     }
-
-    public String toString() {
-        return this.location.getCity() + ", " + this.visitors;
-    }
 }
