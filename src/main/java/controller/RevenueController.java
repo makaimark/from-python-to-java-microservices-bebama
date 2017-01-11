@@ -6,7 +6,7 @@ import model.Analytics;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class AvenueController {
+public class RevenueController {
 
     public static Float totalAvenue(Integer webshop){
         return countAvenue(new AnalyticsDaoJDBC().findByWebshop(webshop));
