@@ -16,15 +16,24 @@ public class AnalyticsDaoJDBC {
 
     public static void add(Analytics model) throws Exception {
         try (Connection connection = JDBCConnect.getConnection()) {
-            PreparedStatement query = connection.prepareStatement("INSERT INTO webshopAnalytics (webshop_id," +
-                    " session_id, visit_start, visit_end, location, amount, currency) VALUES (?, ?, ?, ?, ?, ?, ?);");
-            query.setInt(1, model.getWebshopId());
-            query.setString(2, model.getSessionId());
-            query.setTimestamp(3, model.getStartTime());
-            query.setTimestamp(4, model.getEndTime());
-            query.setString(5, model.getLocation().toString());
-            query.setFloat(6, model.getAmount());
-            query.setString(7, String.valueOf(model.getCurrency()));
+            PreparedStatement query;
+            if (findSessionId(model.getSessionId()).size() > 0) {
+                query = connection.prepareStatement("UPDATE webshopAnalytics SET visit_end = ?, amount = ?, currency  = ? WHERE session_id = ?");
+                query.setTimestamp(1, model.getEndTime());
+                query.setFloat(2, model.getAmount());
+                query.setString(3, String.valueOf(model.getCurrency()));
+                query.setString(4, model.getSessionId());
+            } else {
+                query = connection.prepareStatement("INSERT INTO webshopAnalytics (webshop_id," +
+                        " session_id, visit_start, visit_end, location, amount, currency) VALUES (?, ?, ?, ?, ?, ?, ?);");
+                query.setInt(1, model.getWebshopId());
+                query.setString(2, model.getSessionId());
+                query.setTimestamp(3, model.getStartTime());
+                query.setTimestamp(4, model.getEndTime());
+                query.setString(5, model.getLocation().toString());
+                query.setFloat(6, model.getAmount());
+                query.setString(7, String.valueOf(model.getCurrency()));
+            }
             query.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -33,7 +42,6 @@ public class AnalyticsDaoJDBC {
 
     public static List<Analytics> findByWebshop(int webshop) throws SQLException {
         return getAnalyticsList("SELECT * FROM webshopAnalytics WHERE webshop_id ='" + webshop + "';");
-
     }
 
     public static List<Analytics> findByWebshopTime(int webshop, Timestamp start, Timestamp end) {
@@ -73,4 +81,9 @@ public class AnalyticsDaoJDBC {
                 details[1].substring(1),
                 details[2].substring(1));
     }
+
+    public static List<Analytics> findSessionId(String sessionId) throws SQLException {
+        return getAnalyticsList("SELECT * FROM webshopAnalytics WHERE session_id ='" + sessionId + "';");
+    }
+
 }
