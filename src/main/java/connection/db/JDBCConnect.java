@@ -1,5 +1,7 @@
 package connection.db;
 
+import model.LocationModel;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -30,6 +32,13 @@ public class JDBCConnect {
         DBURL = pro.getProperty("DBURL");
         DB_USER = pro.getProperty("DB_USER");
         DB_PASSWORD = pro.getProperty("DB_PASSWORD");
+    }
+
+    protected static LocationModel stringToLocation(String location) {
+        String[] details = location.split(",");
+        return new LocationModel(details[0],
+                details[1].substring(1),
+                details[2].substring(1));
     }
 
 }

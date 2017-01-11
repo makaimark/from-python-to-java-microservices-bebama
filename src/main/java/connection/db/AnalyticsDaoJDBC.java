@@ -1,18 +1,16 @@
 package connection.db;
 
 import model.Analytics;
-import model.LocationModel;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static connection.db.JDBCConnect.getConnection;
 
 /**
  * Created by makaimark on 2017.01.10..
  */
-public class AnalyticsDaoJDBC {
+public class AnalyticsDaoJDBC extends JDBCConnect {
 
     public static void add(Analytics model) throws Exception {
         try (Connection connection = JDBCConnect.getConnection()) {
@@ -73,13 +71,6 @@ public class AnalyticsDaoJDBC {
             e.printStackTrace();
         }
         return result;
-    }
-
-    private static LocationModel stringToLocation(String location) {
-        String[] details = location.split(",");
-        return new LocationModel(details[0],
-                details[1].substring(1),
-                details[2].substring(1));
     }
 
     public static List<Analytics> findSessionId(String sessionId) throws SQLException {
