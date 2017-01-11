@@ -32,13 +32,13 @@ public class Server {
         templateResolver.setCacheTTLMs(3600000L);
         templateResolver.setResourceResolver(new ClassLoaderResourceResolver());
 
-        get("/", controller::renderTest, new ThymeleafTemplateEngine(templateResolver));
+        get("/", controller::renderMain, new ThymeleafTemplateEngine(templateResolver));
         get("/api", controller::api);
         get("/api/visitor_count", controller::visitorCounter);
+        get("/api/visit_time_count", controller::visitTimeCounter);
         get("stopTime", controller::stopSession);
         get("/api/revenue", controller::countRevenue);
         get("/startTime", controller::startSession);
-        get("/get_location", LocationController::renderLocator, new ThymeleafTemplateEngine());
         post("/get_location", LocationController::getData);
     }
 }
