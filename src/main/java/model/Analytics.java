@@ -10,7 +10,7 @@ public class Analytics {
     private String sessionId;
     private Timestamp startTime;
     private Timestamp endTime;
-    private LocationModel Location;
+    private LocationModel location;
     private Float amount;
     private Currency currency;
 
@@ -20,7 +20,7 @@ public class Analytics {
         this.webshopId = webshopID;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.Location = location;
+        this.location = location;
         this.amount = amount;
         this.currency = Currency.getInstance(currency);
     }
@@ -66,11 +66,11 @@ public class Analytics {
     }
 
     public LocationModel getLocation() {
-        return Location;
+        return location;
     }
 
     public void setLocation(LocationModel location) {
-        Location = location;
+        this.location = location;
     }
 
     public Float getAmount() {
@@ -89,7 +89,13 @@ public class Analytics {
         this.currency = currency;
     }
 
-//    public Timestamp spentTime() {
-//        return this.endTime - this.startTime;
-//    }
+    public String toString(){
+        return "webshop: " + this.webshopId + "\n" +
+                "session: " + this.sessionId + "\n" +
+                "start: " + this.startTime + "\n" +
+                "end: " + this.endTime + "\n" +
+                "location: " + this.location + "\n" +
+                "amount: " + this.amount + "\n" +
+                "currency: " + this.currency;
+    }
 }
