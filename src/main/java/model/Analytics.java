@@ -22,7 +22,7 @@ public class Analytics {
         this.endTime = endTime;
         this.location = location;
         this.amount = amount;
-        this.currency = Currency.getInstance(currency);
+        this.currency = currency == null ? null : Currency.getInstance(currency);
     }
 
     public Integer getId() {
@@ -89,7 +89,7 @@ public class Analytics {
         this.currency = currency;
     }
 
-    public String toString(){
+    public String toString() {
         return "webshop: " + this.webshopId + "\n" +
                 "session: " + this.sessionId + "\n" +
                 "start: " + this.startTime + "\n" +
@@ -97,5 +97,9 @@ public class Analytics {
                 "location: " + this.location + "\n" +
                 "amount: " + this.amount + "\n" +
                 "currency: " + this.currency;
+    }
+
+    public Integer secondsSpent() {
+        return Math.toIntExact((this.getEndTime().getTime()-this.getStartTime().getTime()) / 1000);
     }
 }
