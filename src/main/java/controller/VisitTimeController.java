@@ -3,13 +3,14 @@ package controller;
 import connection.db.AnalyticsDaoJDBC;
 import model.Analytics;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class VisitTimeController {
 
-    public static String averageVisitTime(Integer webshop){
+    public static String averageVisitTime(Integer webshop) throws SQLException {
         return countAverage(new AnalyticsDaoJDBC().findByWebshop(webshop));
     }
 

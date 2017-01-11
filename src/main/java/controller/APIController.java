@@ -7,6 +7,7 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,7 +34,7 @@ public class APIController {
         return "";
     }
 
-    public String visitTimeCounter(Request request, Response response) throws ParseException {
+    public String visitTimeCounter(Request request, Response response) throws ParseException, SQLException {
         webShopId = Integer.parseInt(request.queryParams("webshopId"));
         sessionId = request.queryParams("sessionId");
 
@@ -48,7 +49,7 @@ public class APIController {
         return "";
     }
 
-    public String visitorCounter(Request request, Response response) throws ParseException {
+    public String visitorCounter(Request request, Response response) throws ParseException, SQLException {
         webShopId = Integer.parseInt(request.queryParams("webshopId"));
         sessionId = request.queryParams("sessionId");
 
@@ -82,7 +83,7 @@ public class APIController {
         return "";
     }
 
-    public String countRevenue(Request request, Response response) throws ParseException {
+    public String countRevenue(Request request, Response response) throws ParseException, SQLException {
         sessionId = request.queryParams("sessionId");
         webShopId = Integer.parseInt(request.queryParams("webshopId"));
 
@@ -90,9 +91,9 @@ public class APIController {
             String start = request.queryParams("startTime");
             String stop = request.queryParams("stopTime");
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            RevenueController.avenueByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
+            RevenueController.revenueByTime(webShopId, convertToTimeStamp(format.parse(start)), convertToTimeStamp(format.parse(stop)));
         } else {
-            RevenueController.totalAvenue(webShopId);
+            RevenueController.totalRevenue(webShopId);
         }
         return "";
     }

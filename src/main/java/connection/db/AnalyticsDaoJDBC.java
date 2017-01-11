@@ -46,7 +46,6 @@ public class AnalyticsDaoJDBC {
 
     private static List<Analytics> getAnalyticsList(String query) {
         List<Analytics> result = new ArrayList<>();
-        System.out.println(query);
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
              ResultSet rs = statement.executeQuery(query);

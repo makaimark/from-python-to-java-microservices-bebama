@@ -3,20 +3,21 @@ package controller;
 import connection.db.AnalyticsDaoJDBC;
 import model.Analytics;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
 public class RevenueController {
 
-    public static Float totalAvenue(Integer webshop){
-        return countAvenue(new AnalyticsDaoJDBC().findByWebshop(webshop));
+    public static Float totalRevenue(Integer webshop) throws SQLException {
+        return countRevenue(new AnalyticsDaoJDBC().findByWebshop(webshop));
     }
 
-    public static Float avenueByTime(Integer webshop, Timestamp startTime, Timestamp endTime){
-        return countAvenue(new AnalyticsDaoJDBC().findByWebshopTime(webshop, startTime, endTime));
+    public static Float revenueByTime(Integer webshop, Timestamp startTime, Timestamp endTime){
+        return countRevenue(new AnalyticsDaoJDBC().findByWebshopTime(webshop, startTime, endTime));
     }
 
-    public static Float countAvenue(List<Analytics> purchases){
+    public static Float countRevenue(List<Analytics> purchases){
         Double avenue = purchases.stream().map(Analytics::getAmount).mapToDouble(Float::floatValue).sum();
         return avenue.floatValue();
     }
