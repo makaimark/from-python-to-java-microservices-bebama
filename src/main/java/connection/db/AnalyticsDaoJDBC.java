@@ -22,7 +22,7 @@ public class AnalyticsDaoJDBC {
             query.setString(2, model.getSessionId());
             query.setTimestamp(3, model.getStartTime());
             query.setTimestamp(4, model.getEndTime());
-            query.setString(5, String.valueOf(model.getLocation()));
+            query.setString(5, model.getLocation().toString());
             query.setFloat(6, model.getAmount());
             query.setString(7, String.valueOf(model.getCurrency()));
             query.executeUpdate();

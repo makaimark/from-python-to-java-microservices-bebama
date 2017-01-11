@@ -41,4 +41,9 @@ public class LocationModel {
         allLocations.add(location);
     }
 
+    @Override
+    public String toString(){
+        return String.format("%s, %s, %s", getCity(), getCountry(), getCountryCode());
+    }
+
 }
