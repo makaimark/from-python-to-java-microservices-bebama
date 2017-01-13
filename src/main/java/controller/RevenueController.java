@@ -16,7 +16,7 @@ public class RevenueController {
         return countRevenue(new AnalyticsDaoJDBC().findByWebshopTime(webshop, startTime, endTime));
     }
 
-    public static Float countRevenue(List<Analytics> purchases){
+    private static Float countRevenue(List<Analytics> purchases){
         Double avenue = purchases.stream().map(Analytics::getAmount).mapToDouble(Float::floatValue).sum();
         return avenue.floatValue();
     }
