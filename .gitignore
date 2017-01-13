@@ -6,6 +6,7 @@
 # IntelliJ
 .idea/
 target/
+log/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -20,3 +21,5 @@ target/
 hs_err_pid*
 
 from-python-to-java-microservices-bebama.iml
+
+/src/main/resources/connection.properties
