@@ -1,4 +1,4 @@
-package connection.db;
+package dao.JDBC;
 
 import model.LocationModel;
 
@@ -13,7 +13,7 @@ import java.util.Properties;
  * Created by cickib on 2017.01.09..
  */
 
-public class JDBCConnect {
+public abstract class AbstractDaoJDBC {
 
     private static String DBURL;
     private static String DB_USER;

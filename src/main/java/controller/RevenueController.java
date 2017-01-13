@@ -1,15 +1,14 @@
 package controller;
 
-import connection.db.AnalyticsDaoJDBC;
+import dao.JDBC.AnalyticsDaoJDBC;
 import model.Analytics;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
 public class RevenueController {
 
-    public static Float totalRevenue(Integer webshop) throws SQLException {
+    public static Float totalRevenue(Integer webshop) {
         return countRevenue(new AnalyticsDaoJDBC().findByWebshop(webshop));
     }
 

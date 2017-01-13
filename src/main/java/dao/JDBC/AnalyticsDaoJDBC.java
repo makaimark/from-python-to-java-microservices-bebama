@@ -1,19 +1,16 @@
-package connection.db;
+package dao.JDBC;
 
+import dao.AnalyticsDao;
 import model.Analytics;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
 
-/**
- * Created by makaimark on 2017.01.10..
- */
-public class AnalyticsDaoJDBC extends JDBCConnect {
-
-    public static void add(Analytics model) throws Exception {
-        try (Connection connection = JDBCConnect.getConnection()) {
+    public void add(Analytics model) {
+        try (Connection connection = AbstractDaoJDBC.getConnection()) {
             PreparedStatement query;
             if (findSessionId(model.getSessionId()).size() > 0) {
                 query = connection.prepareStatement("UPDATE webshopAnalytics SET visit_end = ?, amount = ?, currency  = ? WHERE session_id = ?");
@@ -38,11 +35,11 @@ public class AnalyticsDaoJDBC extends JDBCConnect {
         }
     }
 
-    public static List<Analytics> findByWebshop(int webshop) throws SQLException {
+    public List<Analytics> findByWebshop(int webshop) {
         return getAnalyticsList("SELECT * FROM webshopAnalytics WHERE webshop_id ='" + webshop + "';");
     }
 
-    public static List<Analytics> findByWebshopTime(int webshop, Timestamp start, Timestamp end) {
+    public List<Analytics> findByWebshopTime(int webshop, Timestamp start, Timestamp end) {
         return getAnalyticsList("SELECT * FROM webshopAnalytics" +
                 " WHERE webshop_id ='" + webshop +
                 "' AND visit_start >='" + start +
@@ -50,7 +47,7 @@ public class AnalyticsDaoJDBC extends JDBCConnect {
     }
 
 
-    private static List<Analytics> getAnalyticsList(String query) {
+    private List<Analytics> getAnalyticsList(String query) {
         List<Analytics> result = new ArrayList<>();
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
@@ -73,7 +70,7 @@ public class AnalyticsDaoJDBC extends JDBCConnect {
         return result;
     }
 
-    public static List<Analytics> findSessionId(String sessionId) throws SQLException {
+    public List<Analytics> findSessionId(String sessionId) {
         return getAnalyticsList("SELECT * FROM webshopAnalytics WHERE session_id ='" + sessionId + "';");
     }
 

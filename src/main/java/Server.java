@@ -1,5 +1,4 @@
-import connection.db.JDBCConnect;
-import connection.db.PropertiesConfig;
+import dao.JDBC.AbstractDaoJDBC;
 import controller.APIController;
 import controller.LocationController;
 import org.slf4j.Logger;
@@ -25,26 +24,13 @@ public class Server {
 
         logger.debug("Starting server...");
 
-        // --- EXCEPTION HANDLING ---
-        exception(URISyntaxException.class, (exception, request, response) -> {
-            response.status(500);
-            response.body(String.format("URI building error, maybe wrong format? : %s", exception.getMessage()));
-            logger.error("Error while processing request", exception);
-        });
-
-        exception(Exception.class, (exception, request, response) -> {
-            response.status(500);
-            response.body(String.format("Unexpected error occurred: %s", exception.getMessage()));
-            logger.error("Error while processing request", exception);
-        });
-
         // --- SERVER SETUP ---
         staticFileLocation("/public");
         port(PORT);
 
         // --- DB CONNECTION SETUP ---
         PropertiesConfig.config();
-        JDBCConnect.setConnection("connection.properties");
+        AbstractDaoJDBC.setConnection("connection.properties");
 
         // --- EXCEPTION HANDLING ---
         exception(URISyntaxException.class, (exception, request, response) -> {

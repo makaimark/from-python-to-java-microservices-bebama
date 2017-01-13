@@ -1,9 +1,8 @@
 package controller;
 
-import connection.db.AnalyticsDaoJDBC;
+import dao.JDBC.AnalyticsDaoJDBC;
 import model.Analytics;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.stream.IntStream;
 
 public class VisitTimeController {
 
-    public static Map<String, String> averageVisitTime(Integer webshop) throws SQLException {
+    public static Map<String, String> averageVisitTime(Integer webshop) {
         return countAverage(new AnalyticsDaoJDBC().findByWebshop(webshop));
     }
 
@@ -27,12 +26,15 @@ public class VisitTimeController {
             put("max", "00:00:00");
         }};
         if (visits.size() > 0) {
-            IntStream visitSeconds = visits.stream().map(Analytics::secondsSpent).mapToInt(Integer::intValue);
-            statistics.put("average", intToString(visitSeconds.sum() / visits.size()));
-            statistics.put("min", intToString(visitSeconds.min().getAsInt()));
-            statistics.put("max", intToString(visitSeconds.max().getAsInt()));
+            statistics.put("average", intToString(getStream(visits).sum() / visits.size()));
+            statistics.put("min", intToString(getStream(visits).min().getAsInt()));
+            statistics.put("max", intToString(getStream(visits).max().getAsInt()));
         }
         return statistics;
+    }
+
+    private static IntStream getStream(List<Analytics> visits){
+        return visits.stream().map(Analytics::secondsSpent).mapToInt(Integer::intValue);
     }
 
     private static String intToString(Integer duration) {

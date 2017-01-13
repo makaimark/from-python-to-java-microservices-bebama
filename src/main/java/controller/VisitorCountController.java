@@ -1,14 +1,13 @@
 package controller;
 
 
-import connection.db.AnalyticsDaoJDBC;
+import dao.JDBC.AnalyticsDaoJDBC;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 
-public class VisitorController {
+public class VisitorCountController {
 
-    public static int visitors(Integer webshop) throws SQLException {
+    public static int totalVisitors(Integer webshop) {
          return new AnalyticsDaoJDBC().findByWebshop(webshop).size();
     }
 
