@@ -44,17 +44,6 @@ public class APIController {
         stop = customDateParser(req.queryParams("endTime"));
     }
 
-    public String api(Request req, Response res) throws ParseException {
-        topLocations = LocationVisitorController.topLocations(Integer.parseInt(req.queryParams("webshopId")));
-        int highestVisitorCount = Collections.max(topLocations.values());
-        String topLocation = topLocations.entrySet()
-                .stream()
-                .filter(entry -> Objects.equals(entry.getValue(), highestVisitorCount))
-                .map(Map.Entry::getKey).findFirst().orElse(null);
-        return String.format("{'totalVisitorCount': %s, 'mostVisitorsFrom': %s, 'averageVisitTime': %s, 'totalRevenue': %s}",
-                visitorCounter(req, res), topLocation, visitTimeCounter(req, res), countRevenue(req, res));
-    }
-
     public String stopSession(Request req, Response res) {
         String time = req.queryParams("time");
         Date date = new Date(Long.parseLong(time));
@@ -82,25 +71,43 @@ public class APIController {
         }
     }
 
-    public int visitorCounter(Request req, Response res) throws ParseException {
+    public String api(Request req, Response res) throws ParseException {
         webShopId = Integer.parseInt(req.queryParams("webshopId"));
-        sessionId = req.queryParams("sessionId");
-        if (req.queryParams().size() == 3) {
-            getTimes(req, res);
-            return VisitorCountController.visitorsByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop));
-        } else {
-            return VisitorCountController.totalVisitors(webShopId);
-        }
+        topLocations = LocationVisitorController.topLocations(Integer.parseInt(req.queryParams("webshopId")));
+        int highestVisitorCount = Collections.max(topLocations.values());
+        String topLocation = topLocations.entrySet()
+                .stream()
+                .filter(entry -> Objects.equals(entry.getValue(), highestVisitorCount))
+                .map(Map.Entry::getKey).findFirst().orElse(null);
+        Map<String, Object> analytic = new HashMap<>();
+        analytic.put("visitors", VisitorCountController.totalVisitors(webShopId));
+        analytic.put("average_visit_time", VisitTimeController.averageVisitTime(webShopId));
+        analytic.put("most_visited_from", topLocation);
+        analytic.put("revenue", RevenueController.totalRevenue(webShopId));
+        return convertMapToJSONString(analytic);
     }
 
-    public Map<String, String> visitTimeCounter(Request req, Response res) throws ParseException {
+    public String visitorCounter(Request req, Response res) throws ParseException {
+        webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        sessionId = req.queryParams("sessionId");
+        Map<String, Integer> counter = new HashMap<>();
+        if (req.queryParams().size() == 3) {
+            getTimes(req, res);
+            counter.put("visitors", VisitorCountController.visitorsByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop)));
+        } else {
+            counter.put("visitors", VisitorCountController.totalVisitors(webShopId));
+        }
+        return convertMapToJSONString(counter);
+    }
+
+    public String visitTimeCounter(Request req, Response res) throws ParseException {
         webShopId = Integer.parseInt(req.queryParams("webshopId"));
         sessionId = req.queryParams("sessionId");
         if (req.queryParams().size() == 3) {
             getTimes(req, res);
-            return VisitTimeController.averageVisitTimeByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop));
+            return convertMapToJSONString(VisitTimeController.averageVisitTimeByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop)));
         } else {
-            return VisitTimeController.averageVisitTime(webShopId);
+            return convertMapToJSONString(VisitTimeController.averageVisitTime(webShopId));
         }
     }
 
@@ -113,15 +120,17 @@ public class APIController {
         } else return convertMapToJSONString(LocationVisitorController.topLocations(webShopId));
     }
 
-    public Float countRevenue(Request req, Response res) throws ParseException {
+    public String countRevenue(Request req, Response res) throws ParseException {
         sessionId = req.queryParams("sessionId");
         webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        Map<String, Float> revenue = new HashMap<>();
         if (req.queryParams().size() == 3) {
             getTimes(req, res);
-            return RevenueController.revenueByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop));
+            revenue.put("revenue", RevenueController.revenueByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop)));
         } else {
-            return RevenueController.totalRevenue(webShopId);
+            revenue.put("revenue", RevenueController.totalRevenue(webShopId));
         }
+        return convertMapToJSONString(revenue);
     }
 
     private Date customDateParser(String inputDate) throws ParseException {
