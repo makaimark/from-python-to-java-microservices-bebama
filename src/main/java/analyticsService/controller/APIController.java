@@ -1,8 +1,10 @@
-package controller;
+package analyticsService.controller;
 
-import dao.JDBC.AnalyticsDaoJDBC;
-import model.Analytics;
-import model.LocationModel;
+import analyticsService.dao.JDBC.AnalyticsDaoJDBC;
+import analyticsService.dao.JDBC.WebshopDaoJDBC;
+import analyticsService.model.Analytics;
+import analyticsService.model.LocationModel;
+import analyticsService.model.Webshop;
 import org.json.simple.JSONObject;
 import spark.ModelAndView;
 import spark.Request;
@@ -17,7 +19,7 @@ import java.util.*;
 public class APIController {
 
     private String sessionId;
-    private int webShopId = 1;
+    private String webShopId = "1";
     private Timestamp startTime;
     private Timestamp endTime;
     private Date start;
@@ -25,7 +27,7 @@ public class APIController {
     private DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Map<String, Integer> topLocations;
 
-    public int getWebShopId() {
+    public String getWebShopId() {
         return webShopId;
     }
 
@@ -63,7 +65,7 @@ public class APIController {
         LocationModel location = LocationModel.getAllLocations().get(0);
         float amount = 10;
         Currency currency = Currency.getInstance(Locale.US);
-        Analytics model = new Analytics(getWebShopId(), getSessionId(), this.startTime, this.endTime, location, amount, String.valueOf(currency));
+        Analytics model = new Analytics(new WebshopDaoJDBC().findByApyKey(getWebShopId()), getSessionId(), this.startTime, this.endTime, location, amount, String.valueOf(currency));
         try {
             new AnalyticsDaoJDBC().add(model);
         } catch (Exception e) {
@@ -72,8 +74,8 @@ public class APIController {
     }
 
     public String api(Request req, Response res) throws ParseException {
-        webShopId = Integer.parseInt(req.queryParams("webshopId"));
-        topLocations = LocationVisitorController.topLocations(Integer.parseInt(req.queryParams("webshopId")));
+        webShopId = req.queryParams("webshopId");
+        topLocations = LocationVisitorController.topLocations(req.queryParams("webshopId"));
         int highestVisitorCount = Collections.max(topLocations.values());
         String topLocation = topLocations.entrySet()
                 .stream()
@@ -88,7 +90,7 @@ public class APIController {
     }
 
     public String visitorCounter(Request req, Response res) throws ParseException {
-        webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        webShopId = req.queryParams("webshopId");
         sessionId = req.queryParams("sessionId");
         Map<String, Integer> counter = new HashMap<>();
         if (req.queryParams().size() == 3) {
@@ -101,7 +103,7 @@ public class APIController {
     }
 
     public String visitTimeCounter(Request req, Response res) throws ParseException {
-        webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        webShopId = req.queryParams("webshopId");
         sessionId = req.queryParams("sessionId");
         if (req.queryParams().size() == 3) {
             getTimes(req, res);
@@ -113,7 +115,7 @@ public class APIController {
 
     public String locationVisits(Request req, Response res) throws ParseException {
         sessionId = req.queryParams("sessionId");
-        webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        webShopId = req.queryParams("webshopId");
         if (req.queryParams().size() == 3) {
             getTimes(req, res);
             return convertMapToJSONString(LocationVisitorController.topLocationsByTime(webShopId, convertToTimeStamp(start), convertToTimeStamp(stop)));
@@ -122,7 +124,7 @@ public class APIController {
 
     public String countRevenue(Request req, Response res) throws ParseException {
         sessionId = req.queryParams("sessionId");
-        webShopId = Integer.parseInt(req.queryParams("webshopId"));
+        webShopId = req.queryParams("webshopId");
         Map<String, Float> revenue = new HashMap<>();
         if (req.queryParams().size() == 3) {
             getTimes(req, res);

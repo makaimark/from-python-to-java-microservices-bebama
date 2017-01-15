@@ -1,24 +1,25 @@
-package dao.JDBC;
+package analyticsService.dao.JDBC;
 
-import dao.LocationVisitorDao;
-import model.LocationVisitor;
+import analyticsService.dao.LocationVisitorDao;
+import analyticsService.model.LocationVisitor;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationVisitorDaoJDBC extends AnalyticsDaoJDBC implements LocationVisitorDao{
+public class LocationVisitorDaoJDBC extends AbstractDaoJDBC implements LocationVisitorDao {
 
-    public List<LocationVisitor> locationsByWebshop(int webshop) {
+    public List<LocationVisitor> locationsByWebshop(String apiKey) {
         return getLocationList("SELECT count(*) AS totalVisitors, location FROM webshopAnalytics " +
-                "WHERE webshop_id ='" + webshop + "' GROUP BY location ORDER BY totalVisitors LIMIT 10;");
+                "WHERE webshop_id = (SELECT ws_id FROM webshop WHERE apikey ='" + apiKey + "') " +
+                "GROUP BY location ORDER BY totalVisitors LIMIT 10;");
     }
 
-    public List<LocationVisitor> locationsByWebshopTime(int webshop, Timestamp start, Timestamp end) {
+    public List<LocationVisitor> locationsByWebshopTime(String apiKey, Timestamp start, Timestamp end) {
         return getLocationList("SELECT count(*) AS totalVisitors, location FROM webshopAnalytics " +
-                " WHERE webshop_id ='" + webshop +
-                "' AND visit_start >='" + start +
-                "' AND visit_end <='" + end + "' GROUP BY location ORDER BY totalVisitors LIMIT 10;");
+                " WHERE webshop_id = (SELECT ws_id FROM webshop WHERE apikey ='" + apiKey + "') " +
+                "AND visit_start >='" + start + "' " +
+                "AND visit_end <='" + end + "' GROUP BY location ORDER BY totalVisitors LIMIT 10;");
     }
 
     private List<LocationVisitor> getLocationList(String query) {

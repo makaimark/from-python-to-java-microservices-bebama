@@ -1,6 +1,6 @@
-package controller;
+package analyticsService.controller;
 
-import model.LocationModel;
+import analyticsService.model.LocationModel;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

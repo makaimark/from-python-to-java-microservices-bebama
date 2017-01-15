@@ -1,7 +1,7 @@
-package controller;
+package analyticsService.controller;
 
-import dao.JDBC.AnalyticsDaoJDBC;
-import model.Analytics;
+import analyticsService.dao.JDBC.AnalyticsDaoJDBC;
+import analyticsService.model.Analytics;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -11,12 +11,12 @@ import java.util.stream.IntStream;
 
 public class VisitTimeController {
 
-    public static Map<String, String> averageVisitTime(Integer webshop) {
-        return countAverage(new AnalyticsDaoJDBC().findByWebshop(webshop));
+    public static Map<String, String> averageVisitTime(String apiKey) {
+        return countAverage(new AnalyticsDaoJDBC().findByWebshop(apiKey));
     }
 
-    public static Map<String, String> averageVisitTimeByTime(Integer webshop, Timestamp startTime, Timestamp endTime) {
-        return countAverage(new AnalyticsDaoJDBC().findByWebshopTime(webshop, startTime, endTime));
+    public static Map<String, String> averageVisitTimeByTime(String apiKey, Timestamp startTime, Timestamp endTime) {
+        return countAverage(new AnalyticsDaoJDBC().findByWebshopTime(apiKey, startTime, endTime));
     }
 
     private static Map<String, String> countAverage(List<Analytics> visits) {

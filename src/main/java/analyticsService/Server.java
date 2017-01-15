@@ -1,6 +1,8 @@
-import dao.JDBC.AbstractDaoJDBC;
-import controller.APIController;
-import controller.LocationController;
+package analyticsService;
+
+import analyticsService.controller.APIController;
+import analyticsService.controller.LocationController;
+import analyticsService.dao.JDBC.AbstractDaoJDBC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.resourceresolver.ClassLoaderResourceResolver;
@@ -68,7 +70,7 @@ public class Server {
 
         enableDebugScreen();
 
-        logger.info("Server started on port " + PORT);
+        logger.info("analyticsService.Server started on port " + PORT);
 
     }
 }

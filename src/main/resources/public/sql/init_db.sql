@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS webshop
 (
   ws_id SERIAL PRIMARY KEY,
-  webshop_key VARCHAR UNIQUE
+  ws_name VARCHAR UNIQUE,
+  apikey VARCHAR UNIQUE
 );
 
 

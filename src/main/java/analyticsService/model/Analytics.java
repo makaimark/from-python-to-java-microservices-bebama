@@ -1,4 +1,4 @@
-package model;
+package analyticsService.model;
 
 import java.sql.Timestamp;
 import java.util.Currency;
@@ -6,7 +6,7 @@ import java.util.Currency;
 public class Analytics {
 
     private Integer id;
-    private Integer webshopId;
+    private Webshop webshop;
     private String sessionId;
     private Timestamp startTime;
     private Timestamp endTime;
@@ -14,10 +14,9 @@ public class Analytics {
     private Float amount;
     private Currency currency;
 
-    public Analytics(Integer webshopID, String sessionId, Timestamp startTime, Timestamp endTime, LocationModel location, Float amount, String currency) {
-        this.webshopId = webshopID;
+    public Analytics(Webshop webshop, String sessionId, Timestamp startTime, Timestamp endTime, LocationModel location, Float amount, String currency) {
+        this.webshop = webshop;
         this.sessionId = sessionId;
-        this.webshopId = webshopID;
         this.startTime = startTime;
         this.endTime = endTime;
         this.location = location;
@@ -33,12 +32,12 @@ public class Analytics {
         this.id = id;
     }
 
-    public Integer getWebshopId() {
-        return webshopId;
+    public Webshop getWebshop() {
+        return webshop;
     }
 
-    public void setWebshopId(Integer webshopId) {
-        this.webshopId = webshopId;
+    public void setWebshop(Webshop webshop) {
+        this.webshop = webshop;
     }
 
     public String getSessionId() {
@@ -90,7 +89,7 @@ public class Analytics {
     }
 
     public String toString() {
-        return "webshop: " + this.webshopId + "\n" +
+        return "webshop: " + this.webshop + "\n" +
                 "session: " + this.sessionId + "\n" +
                 "start: " + this.startTime + "\n" +
                 "end: " + this.endTime + "\n" +

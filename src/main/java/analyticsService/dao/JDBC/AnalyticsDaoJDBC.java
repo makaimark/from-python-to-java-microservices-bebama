@@ -1,13 +1,15 @@
-package dao.JDBC;
+package analyticsService.dao.JDBC;
 
-import dao.AnalyticsDao;
-import model.Analytics;
+import analyticsService.dao.AnalyticsDao;
+import analyticsService.dao.WebshopDao;
+import analyticsService.model.Analytics;
+import analyticsService.model.Webshop;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
+public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao {
 
     public void add(Analytics model) {
         try (Connection connection = AbstractDaoJDBC.getConnection()) {
@@ -21,7 +23,7 @@ public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
             } else {
                 query = connection.prepareStatement("INSERT INTO webshopAnalytics (webshop_id," +
                         " session_id, visit_start, visit_end, location, amount, currency) VALUES (?, ?, ?, ?, ?, ?, ?);");
-                query.setInt(1, model.getWebshopId());
+                query.setInt(1, model.getWebshop().getId());
                 query.setString(2, model.getSessionId());
                 query.setTimestamp(3, model.getStartTime());
                 query.setTimestamp(4, model.getEndTime());
@@ -35,15 +37,18 @@ public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
         }
     }
 
-    public List<Analytics> findByWebshop(int webshop) {
-        return getAnalyticsList("SELECT * FROM webshopAnalytics WHERE webshop_id ='" + webshop + "';");
+    public List<Analytics> findByWebshop(String apiKey) {
+        return getAnalyticsList("SELECT * FROM webshopAnalytics " +
+                "LEFT JOIN webshop ON webshop_id = ws_id " +
+                "WHERE webshop_id = (SELECT ws_id FROM webshop WHERE apikey ='" + apiKey + "');");
     }
 
-    public List<Analytics> findByWebshopTime(int webshop, Timestamp start, Timestamp end) {
-        return getAnalyticsList("SELECT * FROM webshopAnalytics" +
-                " WHERE webshop_id ='" + webshop +
-                "' AND visit_start >='" + start +
-                "' AND visit_end <='" + end + "';");
+    public List<Analytics> findByWebshopTime(String apiKey, Timestamp start, Timestamp end) {
+        return getAnalyticsList("SELECT * FROM webshopAnalytics " +
+                "LEFT JOIN webshop ON webshop_id = ws_id " +
+                "WHERE webshop_id = (SELECT ws_id FROM webshop WHERE apikey ='" + apiKey + "') " +
+                "AND visit_start >='" + start + "' " +
+                "AND visit_end <='" + end + "';");
     }
 
 
@@ -54,7 +59,10 @@ public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
              ResultSet rs = statement.executeQuery(query);
         ) {
             while (rs.next()) {
-                Analytics analytics = new Analytics(rs.getInt("webshop_id"),
+                Webshop webshop = new Webshop(rs.getString("ws_name"));
+                webshop.setId(rs.getInt("ws_id"));
+                Analytics analytics = new Analytics(
+                        webshop,
                         rs.getString("session_id"),
                         rs.getTimestamp("visit_start"),
                         rs.getTimestamp("visit_end"),
