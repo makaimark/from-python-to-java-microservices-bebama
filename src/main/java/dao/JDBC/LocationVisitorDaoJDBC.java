@@ -9,11 +9,23 @@ import java.util.List;
 
 public class LocationVisitorDaoJDBC extends AnalyticsDaoJDBC implements LocationVisitorDao{
 
+    /**
+     * Finds the visitors location by webshop id
+     * @param webshop
+     * @return List of LocationVisitor models
+     */
     public List<LocationVisitor> locationsByWebshop(int webshop) {
         return getLocationList("SELECT count(*) AS totalVisitors, location FROM webshopAnalytics " +
                 "WHERE webshop_id ='" + webshop + "' GROUP BY location ORDER BY totalVisitors LIMIT 10;");
     }
 
+    /**
+     * Finds the visitors location by webshop id and by time
+     * @param webshop
+     * @param start
+     * @param end
+     * @return List of LocationVisitor models
+     */
     public List<LocationVisitor> locationsByWebshopTime(int webshop, Timestamp start, Timestamp end) {
         return getLocationList("SELECT count(*) AS totalVisitors, location FROM webshopAnalytics " +
                 " WHERE webshop_id ='" + webshop +
@@ -21,6 +33,11 @@ public class LocationVisitorDaoJDBC extends AnalyticsDaoJDBC implements Location
                 "' AND visit_end <='" + end + "' GROUP BY location ORDER BY totalVisitors LIMIT 10;");
     }
 
+    /**
+     * Collects the locations from the JDBC by he query
+     * @param query
+     * @return List of LocationVisitor models
+     */
     private List<LocationVisitor> getLocationList(String query) {
         List<LocationVisitor> result = new ArrayList<>();
         try (Connection connection = getConnection();

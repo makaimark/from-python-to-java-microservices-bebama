@@ -33,17 +33,34 @@ public class APIController {
         return sessionId;
     }
 
+    /**
+     * @param req - A request object, comes from the server
+     * @param res - A response object, comes from the server
+     * @return ModelAndView time_location html
+     */
     public ModelAndView renderMain(Request req, Response res) {
         Map<Object, Object> params = new HashMap<>();
         startSession(req, res);
         return new ModelAndView(params, "time_location");
     }
 
+    /**
+     * Get the start and stop time from the webshop
+     * @param req - A request object, comes from the server
+     * @param res - A response object, comes from the server
+     * @throws ParseException
+     */
     private void getTimes(Request req, Response res) throws ParseException {
         start = customDateParser(req.queryParams("startTime"));
         stop = customDateParser(req.queryParams("endTime"));
     }
 
+    /**
+     * Stop the session when close the page
+     * @param req - A request object, comes from the server
+     * @param res - A response object, comes from the server
+     * @return an empty string, must have
+     */
     public String stopSession(Request req, Response res) {
         String time = req.queryParams("time");
         Date date = new Date(Long.parseLong(time));
@@ -52,6 +69,12 @@ public class APIController {
         return "";
     }
 
+    /**
+     * Start the timer, when somebody opens the webshop
+     * @param req - A request object, comes from the server
+     * @param res - A response object, comes from the server
+     * @return an empty string, must have
+     */
     public String startSession(Request req, Response res) {
         sessionId = req.session().id();
         Date date = new Date();
@@ -59,6 +82,11 @@ public class APIController {
         return "";
     }
 
+    /**
+     *  This function builds up the analytics models when every data is ready, and puts it to the JDBC
+     * @param req - A request object, comes from the server
+     * @param res - A response object, comes from the server
+     */
     public void analytics(Request req, Response res) {
         LocationModel location = LocationModel.getAllLocations().get(0);
         float amount = 10;
@@ -71,6 +99,13 @@ public class APIController {
         }
     }
 
+    /**
+     * This function collects all information about a webshop
+     * @param req
+     * @param res
+     * @return return with a Json string
+     * @throws ParseException
+     */
     public String api(Request req, Response res) throws ParseException {
         webShopId = Integer.parseInt(req.queryParams("webshopId"));
         topLocations = LocationVisitorController.topLocations(Integer.parseInt(req.queryParams("webshopId")));
@@ -87,6 +122,13 @@ public class APIController {
         return convertMapToJSONString(analytic);
     }
 
+    /**
+     * Get the webshop ID from the request, and return with the number of visitors
+     * @param req
+     * @param res
+     * @return return with the number of visitors, as a Json string
+     * @throws ParseException
+     */
     public String visitorCounter(Request req, Response res) throws ParseException {
         webShopId = Integer.parseInt(req.queryParams("webshopId"));
         sessionId = req.queryParams("sessionId");
@@ -100,6 +142,13 @@ public class APIController {
         return convertMapToJSONString(counter);
     }
 
+    /**
+     * Collects the visitors by webshop Id and by time
+     * @param req
+     * @param res
+     * @return return with a Json string
+     * @throws ParseException
+     */
     public String visitTimeCounter(Request req, Response res) throws ParseException {
         webShopId = Integer.parseInt(req.queryParams("webshopId"));
         sessionId = req.queryParams("sessionId");
@@ -111,6 +160,13 @@ public class APIController {
         }
     }
 
+    /**
+     * Counts the visitors by location and by webshop id and by time
+     * @param req
+     * @param res
+     * @return with a Json string
+     * @throws ParseException
+     */
     public String locationVisits(Request req, Response res) throws ParseException {
         sessionId = req.queryParams("sessionId");
         webShopId = Integer.parseInt(req.queryParams("webshopId"));
@@ -120,6 +176,13 @@ public class APIController {
         } else return convertMapToJSONString(LocationVisitorController.topLocations(webShopId));
     }
 
+    /**
+     * Collects information about revenue, by webshop id and by time
+     * @param req
+     * @param res
+     * @return a Json string
+     * @throws ParseException
+     */
     public String countRevenue(Request req, Response res) throws ParseException {
         sessionId = req.queryParams("sessionId");
         webShopId = Integer.parseInt(req.queryParams("webshopId"));
@@ -133,6 +196,12 @@ public class APIController {
         return convertMapToJSONString(revenue);
     }
 
+    /**
+     * Parse a date from string to Date
+     * @param inputDate
+     * @return Date
+     * @throws ParseException
+     */
     private Date customDateParser(String inputDate) throws ParseException {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -145,6 +214,11 @@ public class APIController {
         }
     }
 
+    /**
+     * Converts Date to timeStamp
+     * @param date
+     * @return timeStamp
+     */
     private Timestamp convertToTimeStamp(Date date) {
         if (date != null) {
             Calendar cal = Calendar.getInstance();
@@ -156,6 +230,11 @@ public class APIController {
         }
     }
 
+    /**
+     * Converts Map to json string
+     * @param map
+     * @return json string
+     */
     private String convertMapToJSONString(Map map){
         return (new JSONObject(){{putAll(map);}}).toString();
     }
