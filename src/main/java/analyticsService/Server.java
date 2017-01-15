@@ -70,7 +70,7 @@ public class Server {
 
         enableDebugScreen();
 
-        logger.info("analyticsService.Server started on port " + PORT);
+        logger.info("Server started on port " + PORT);
 
     }
 }

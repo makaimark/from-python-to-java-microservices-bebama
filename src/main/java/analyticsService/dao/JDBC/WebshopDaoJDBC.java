@@ -28,11 +28,6 @@ public class WebshopDaoJDBC extends AbstractDaoJDBC implements WebshopDao {
        return getWebshop("SELECT * FROM webshop WHERE apikey ='" + apiKey + "';");
     }
 
-    @Override
-    public Webshop findById(Integer id) {
-        return getWebshop("SELECT * FROM webshop WHERE ws_id ='" + id + "';");
-    }
-
     private Webshop getWebshop(String query){
         Webshop result = null;
         try (Connection connection = getConnection();
