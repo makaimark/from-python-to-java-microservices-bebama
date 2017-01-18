@@ -30,7 +30,7 @@ public abstract class AbstractDaoJDBC {
 
     /**
      * Set the connection with the config file
-     * @param config
+     * @param config config.properties file name in string
      * @throws IOException
      */
     public static void setConnection(String config) throws IOException {
@@ -46,7 +46,7 @@ public abstract class AbstractDaoJDBC {
 
     /**
      * Makes a location model from string
-     * @param location
+     * @param location The location of the visitor in string
      * @return LocationModel
      */
     protected static LocationModel stringToLocation(String location) {

@@ -12,8 +12,8 @@ public class LocationVisitorController {
 
     /**
      * Founds the location with the most visitors by webhop id
-     * @param webshop
-     * @return Map
+     * @param webshop This is the id of the webshop
+     * @return A Map that contains the number of visitors from the locations
      */
     public static Map<String, Integer> topLocations(Integer webshop) {
         return converter(new LocationVisitorDaoJDBC().locationsByWebshop(webshop));
@@ -21,10 +21,10 @@ public class LocationVisitorController {
 
     /**
      * Founds the location with the most visitors by time and by webhop id
-     * @param webshop
-     * @param startTime
-     * @param endTime
-     * @return Map
+     * @param webshop This is the id of the webshop
+     * @param startTime The start time of the statistic
+     * @param endTime The end time of the statistic
+     * @return A Map that contains the number of visitors from the locations by time
      */
     public static Map<String, Integer> topLocationsByTime(Integer webshop, Timestamp startTime, Timestamp endTime) {
         return converter(new LocationVisitorDaoJDBC().locationsByWebshopTime(webshop, startTime, endTime));
@@ -32,8 +32,8 @@ public class LocationVisitorController {
 
     /**
      * converts list of location to Map
-     * @param locations
-     * @return Map
+     * @param locations A List that contains the locations
+     * @return A Map that contains the number of visitors from the locations
      */
     public static Map<String, Integer> converter(List<LocationVisitor> locations) {
         Map<String, Integer> locationMap = new HashMap<>();

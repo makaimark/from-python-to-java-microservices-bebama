@@ -13,8 +13,8 @@ public class VisitTimeController {
 
     /**
      * Counts the average visit time by webshop id
-     * @param webshop
-     * @return Map
+     * @param webshop The id of the webshop
+     * @return A Map that contains the average visit times by webshopid
      */
     public static Map<String, String> averageVisitTime(Integer webshop) {
         return countAverage(new AnalyticsDaoJDBC().findByWebshop(webshop));
@@ -22,9 +22,9 @@ public class VisitTimeController {
 
     /**
      * Counts the average visit time by webshop id and by time
-     * @param webshop
-     * @param startTime
-     * @param endTime
+     * @param webshop The id of the webshop
+     * @param startTime The start time of the statistic
+     * @param endTime The end time of the statistic
      * @return Map
      */
     public static Map<String, String> averageVisitTimeByTime(Integer webshop, Timestamp startTime, Timestamp endTime) {
@@ -33,8 +33,8 @@ public class VisitTimeController {
 
     /**
      * Counts the average visit time from list of Analitycs
-     * @param visits
-     * @return Map
+     * @param visits A list of visits
+     * @return A Map that contains the number of visitors
      */
     private static Map<String, String> countAverage(List<Analytics> visits) {
         Map<String, String> statistics = new HashMap<String, String>(){{
@@ -61,7 +61,7 @@ public class VisitTimeController {
 
     /**
      * Converts Integer to string
-     * @param duration
+     * @param duration An integer that we would like to convert to string
      * @return String
      */
     private static String intToString(Integer duration) {

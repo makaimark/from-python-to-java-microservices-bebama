@@ -11,7 +11,7 @@ public class LocationVisitorDaoJDBC extends AnalyticsDaoJDBC implements Location
 
     /**
      * Finds the visitors location by webshop id
-     * @param webshop
+     * @param webshop The id of the webshop
      * @return List of LocationVisitor models
      */
     public List<LocationVisitor> locationsByWebshop(int webshop) {
@@ -21,9 +21,9 @@ public class LocationVisitorDaoJDBC extends AnalyticsDaoJDBC implements Location
 
     /**
      * Finds the visitors location by webshop id and by time
-     * @param webshop
-     * @param start
-     * @param end
+     * @param webshop The id of the webshop
+     * @param start The start time of the statistic
+     * @param end The end time of the statistic
      * @return List of LocationVisitor models
      */
     public List<LocationVisitor> locationsByWebshopTime(int webshop, Timestamp start, Timestamp end) {
@@ -35,7 +35,7 @@ public class LocationVisitorDaoJDBC extends AnalyticsDaoJDBC implements Location
 
     /**
      * Collects the locations from the JDBC by he query
-     * @param query
+     * @param query An sql query in string format
      * @return List of LocationVisitor models
      */
     private List<LocationVisitor> getLocationList(String query) {

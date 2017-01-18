@@ -25,10 +25,18 @@ public class APIController {
     private DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Map<String, Integer> topLocations;
 
+    /**
+     * Get the webshopId
+     * @return return the webshopId
+     */
     public int getWebShopId() {
         return webShopId;
     }
 
+    /**
+     * get the sessionId
+     * @return return the sessionId
+     */
     public String getSessionId() {
         return sessionId;
     }
@@ -101,8 +109,8 @@ public class APIController {
 
     /**
      * This function collects all information about a webshop
-     * @param req
-     * @param res
+     * @param req A request object, comes from the server
+     * @param res A response object, comes from the server
      * @return return with a Json string
      * @throws ParseException
      */
@@ -124,8 +132,8 @@ public class APIController {
 
     /**
      * Get the webshop ID from the request, and return with the number of visitors
-     * @param req
-     * @param res
+     * @param req A request object, comes from the server
+     * @param res A response object, comes from the server
      * @return return with the number of visitors, as a Json string
      * @throws ParseException
      */
@@ -144,8 +152,8 @@ public class APIController {
 
     /**
      * Collects the visitors by webshop Id and by time
-     * @param req
-     * @param res
+     * @param req A request object, comes from the server
+     * @param res A response object, comes from the server
      * @return return with a Json string
      * @throws ParseException
      */
@@ -162,8 +170,8 @@ public class APIController {
 
     /**
      * Counts the visitors by location and by webshop id and by time
-     * @param req
-     * @param res
+     * @param req A request object, comes from the server
+     * @param res A response object, comes from the server
      * @return with a Json string
      * @throws ParseException
      */
@@ -178,8 +186,8 @@ public class APIController {
 
     /**
      * Collects information about revenue, by webshop id and by time
-     * @param req
-     * @param res
+     * @param req A request object, comes from the server
+     * @param res A response object, comes from the server
      * @return a Json string
      * @throws ParseException
      */
@@ -198,8 +206,8 @@ public class APIController {
 
     /**
      * Parse a date from string to Date
-     * @param inputDate
-     * @return Date
+     * @param inputDate Input date in string format
+     * @return Date from inputDate string
      * @throws ParseException
      */
     private Date customDateParser(String inputDate) throws ParseException {
@@ -216,7 +224,7 @@ public class APIController {
 
     /**
      * Converts Date to timeStamp
-     * @param date
+     * @param date A Date that we would like to convert to timestamp
      * @return timeStamp
      */
     private Timestamp convertToTimeStamp(Date date) {
@@ -232,7 +240,7 @@ public class APIController {
 
     /**
      * Converts Map to json string
-     * @param map
+     * @param map A Map that we would like to convert to JsonString
      * @return json string
      */
     private String convertMapToJSONString(Map map){

@@ -15,9 +15,9 @@ public class LocationController {
 
     /**
      * Gets location data from the request
-     * @param req
-     * @param res
-     * @return a response object
+     * @param req A request object
+     * @param res A response object
+     * @return A response object
      * @throws ParseException
      */
     //   JSON keys: {city, country, countryCode}

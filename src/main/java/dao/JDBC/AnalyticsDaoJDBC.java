@@ -11,7 +11,7 @@ public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
 
     /**
      * Adds new Analitycs model to the JDBC
-     * @param model
+     * @param model An Analitycs model
      */
     public void add(Analytics model) {
         try (Connection connection = AbstractDaoJDBC.getConnection()) {
@@ -41,7 +41,7 @@ public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
 
     /**
      * Finds the Analityc models by webshop id
-     * @param webshop
+     * @param webshop The id of the webshop
      * @return List of Analitycs
      */
     public List<Analytics> findByWebshop(int webshop) {
@@ -50,10 +50,10 @@ public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
 
     /**
      * Finds the Analityc model by webshop id and by time
-     * @param webshop
-     * @param start
-     * @param end
-     * @return
+     * @param webshop The id of the webshop
+     * @param start The start time of the statistic
+     * @param end The end time of the statistic
+     * @return A List of analitycs
      */
     public List<Analytics> findByWebshopTime(int webshop, Timestamp start, Timestamp end) {
         return getAnalyticsList("SELECT * FROM webshopAnalytics" +
@@ -65,7 +65,7 @@ public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
 
     /**
      * Finds the Analityc models by the query
-     * @param query
+     * @param query An sql query in string
      * @return List of Analityc models
      */
     private List<Analytics> getAnalyticsList(String query) {
@@ -93,7 +93,7 @@ public class AnalyticsDaoJDBC extends AbstractDaoJDBC implements AnalyticsDao{
 
     /**
      * Finds the session id from the parameter
-     * @param sessionId
+     * @param sessionId the id of the session in string
      * @return List of Analityc models
      */
     public List<Analytics> findSessionId(String sessionId) {
